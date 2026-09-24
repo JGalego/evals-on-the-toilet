@@ -136,16 +136,22 @@ const Footer = ({ dark }: { dark?: boolean }) => {
   return (
     <>
       {/* perforation — the only toilet joke in the deck */}
-      <div
-        style={{
-          position: 'absolute',
-          left: PAD,
-          right: PAD,
-          top: 986,
-          height: 2,
-          backgroundImage: `repeating-linear-gradient(90deg, ${dark ? c.inkRule : c.rule} 0 14px, transparent 14px 26px)`,
-        }}
-      />
+      <svg
+        width={1920 - 2 * PAD}
+        height="2"
+        style={{ position: 'absolute', left: PAD, top: 986 }}
+        aria-hidden
+      >
+        <line
+          x1="0"
+          y1="1"
+          x2={1920 - 2 * PAD}
+          y2="1"
+          stroke={dark ? c.inkRule : c.rule}
+          strokeWidth="2"
+          strokeDasharray="14 12"
+        />
+      </svg>
       <div
         style={{
           position: 'absolute',
