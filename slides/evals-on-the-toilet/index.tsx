@@ -69,8 +69,6 @@ if (typeof document !== 'undefined') {
       @keyframes eot-spin  { to { transform: rotate(360deg); } }
       @keyframes eot-hl    { 0%, 16% { opacity: 1; } 24%, 92% { opacity: 0; } 100% { opacity: 1; } }
       @keyframes eot-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
-      @keyframes eot-type  { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
-      @keyframes eot-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
     `;
     document.head.appendChild(style);
   }
@@ -156,8 +154,7 @@ const Footer = ({ dark }: { dark?: boolean }) => {
           top: 1010,
           display: 'flex',
           justifyContent: 'space-between',
-          fontFamily: mono,
-      fontFeatureSettings: '"calt" 0, "liga" 0',
+          fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0',
           fontSize: 18,
           letterSpacing: '0.16em',
           textTransform: 'uppercase',
@@ -195,8 +192,7 @@ const Frame = ({ children, dark }: { children: ReactNode; dark?: boolean }) => (
 const Eyebrow = ({ children, style }: { children: ReactNode; style?: CSSProperties }) => (
   <div
     style={{
-      fontFamily: mono,
-      fontFeatureSettings: '"calt" 0, "liga" 0',
+      fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0',
       fontSize: 22,
       letterSpacing: '0.16em',
       textTransform: 'uppercase',
@@ -245,8 +241,7 @@ const serif = (size: number, extra?: CSSProperties): CSSProperties => ({
 const Label = ({ children, style }: { children: ReactNode; style?: CSSProperties }) => (
   <div
     style={{
-      fontFamily: mono,
-      fontFeatureSettings: '"calt" 0, "liga" 0',
+      fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0',
       fontSize: 20,
       letterSpacing: '0.14em',
       textTransform: 'uppercase',
@@ -271,13 +266,12 @@ const Cover: Page = () => {
           justifyContent: 'center',
         }}
       >
-        <Eyebrow style={r(0, 'fade')}>A short case for evaluation as engineering</Eyebrow>
         <h1
           style={serif(132, {
             fontWeight: 400,
             lineHeight: 1.04,
             letterSpacing: '-0.03em',
-            margin: '40px 0 0',
+            margin: 0,
           })}
         >
           <span style={{ display: 'block', ...r(120, 'up', 900) }}>
@@ -287,38 +281,6 @@ const Cover: Page = () => {
             what tests are to <em>software</em>.
           </span>
         </h1>
-        <p style={{ fontSize: 36, color: c.muted, margin: '44px 0 0', ...r(560) }}>
-          …well, kinda.
-        </p>
-        <div
-          style={{
-            marginTop: 88,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 28,
-            fontFamily: mono,
-      fontFeatureSettings: '"calt" 0, "liga" 0',
-            fontSize: 28,
-            color: c.muted,
-            ...r(900, 'fade', 900),
-          }}
-        >
-          <span>assert f(x) == y</span>
-          <svg width="72" height="16" viewBox="0 0 72 16" aria-hidden>
-            <path
-              d="M0 8 H66 M58 1 L68 8 L58 15"
-              fill="none"
-              stroke="var(--osd-accent)"
-              strokeWidth="2"
-              pathLength={1}
-              strokeDasharray="1"
-              style={r(1100, 'draw', 700)}
-            />
-          </svg>
-          <span style={{ color: 'var(--osd-text)' }}>
-            score(m, D) = 0.87 <span style={{ color: c.faint }}>± 0.02</span>
-          </span>
-        </div>
       </div>
     </Frame>
   );
@@ -356,8 +318,7 @@ const AnalogyRow = ({
         {tool}
       </div>
       <div style={{ fontSize: 38, lineHeight: 1.4, color: c.muted }}>
-        tell you if the <span style={{ color: 'var(--osd-text)', fontWeight: 500 }}>{noun}</span>{' '}
-        still does what you meant.
+        check the <span style={{ color: 'var(--osd-text)', fontWeight: 500 }}>{noun}</span>.
       </div>
     </div>
   );
@@ -394,15 +355,13 @@ const Panel = ({ children, delay }: { children: ReactNode; delay: number }) => {
 };
 
 const Code = ({ children }: { children: ReactNode }) => (
-  <div style={{ fontFamily: mono,
-      fontFeatureSettings: '"calt" 0, "liga" 0', fontSize: 36, color: 'var(--osd-text)' }}>{children}</div>
+  <div style={{ fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0', fontSize: 36, color: 'var(--osd-text)' }}>{children}</div>
 );
 
 const Pill = ({ children, on }: { children: ReactNode; on?: boolean }) => (
   <div
     style={{
-      fontFamily: mono,
-      fontFeatureSettings: '"calt" 0, "liga" 0',
+      fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0',
       fontSize: 30,
       padding: '18px 44px',
       borderRadius: 999,
@@ -454,8 +413,7 @@ const Histogram = () => {
           position: 'absolute',
           left: '58%',
           top: -40,
-          fontFamily: mono,
-      fontFeatureSettings: '"calt" 0, "liga" 0',
+          fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0',
           fontSize: 22,
           color: 'var(--osd-accent)',
           transform: 'translateX(-50%)',
@@ -468,12 +426,7 @@ const Histogram = () => {
   );
 };
 
-const PanelCaption = ({ big, small }: { big: string; small: string }) => (
-  <div>
-    <div style={serif(44)}>{big}</div>
-    <div style={{ fontSize: 28, color: c.muted, marginTop: 10 }}>{small}</div>
-  </div>
-);
+const PanelCaption = ({ big }: { big: string }) => <div style={serif(44)}>{big}</div>;
 
 const AssertMeasure: Page = () => (
   <Frame>
@@ -493,14 +446,14 @@ const AssertMeasure: Page = () => (
           <Pill on>pass</Pill>
           <Pill>fail</Pill>
         </div>
-        <PanelCaption big="A verdict." small="Binary · deterministic · one right answer" />
+        <PanelCaption big="A verdict." />
       </Panel>
       <Panel delay={380}>
         <Code>
           score(model, D) <span style={{ color: c.faint }}>→</span> 0.87
         </Code>
         <Histogram />
-        <PanelCaption big="A distribution." small="Statistical · noisy · many acceptable answers" />
+        <PanelCaption big="A distribution." />
       </Panel>
     </div>
   </Frame>
@@ -509,15 +462,11 @@ const AssertMeasure: Page = () => (
 // ─── 04 · Expansion ───────────────────────────────────────────────────────────
 const Term = ({
   term,
-  order,
   title,
-  body,
   lead,
 }: {
   term: ReactNode;
-  order: string;
   title: string;
-  body: string;
   lead?: boolean;
 }) => (
   <div style={{ borderTop: `2px solid ${lead ? 'var(--osd-accent)' : c.rule}`, paddingTop: 36 }}>
@@ -531,9 +480,7 @@ const Term = ({
     >
       {term}
     </div>
-    <Label style={{ marginTop: 40, color: lead ? 'var(--osd-accent)' : c.faint }}>{order}</Label>
-    <div style={serif(42, { marginTop: 14 })}>{title}</div>
-    <div style={{ fontSize: 28, lineHeight: 1.5, color: c.muted, marginTop: 12 }}>{body}</div>
+    <div style={serif(42, { marginTop: 36, color: lead ? 'var(--osd-accent)' : c.muted })}>{title}</div>
   </div>
 );
 
@@ -557,7 +504,7 @@ const Expansion: Page = () => {
         }}
       >
         <Steps>
-          <Term lead term="Test" order="0th order" title="Pass / fail" body="One sample, one right answer." />
+          <Term lead term="Test" title="Pass / fail" />
           <Step duration={320}>
             <Term
               term={
@@ -566,9 +513,7 @@ const Expansion: Page = () => {
                   δ·score
                 </>
               }
-              order="1st order"
               title="Partial credit"
-              body="Rubrics, graders, judges."
             />
           </Step>
           <Step duration={320}>
@@ -578,9 +523,7 @@ const Expansion: Page = () => {
                   <Plus />½ σ²
                 </>
               }
-              order="2nd order"
               title="Variance"
-              body="Run it N times. Report the spread."
             />
           </Step>
           <Step duration={320}>
@@ -591,15 +534,13 @@ const Expansion: Page = () => {
                   O(shift)
                 </>
               }
-              order="Higher order"
               title="Drift"
-              body="New inputs, leakage, Goodhart."
             />
           </Step>
         </Steps>
       </div>
-      <p style={serif(34, { fontStyle: 'italic', fontWeight: 400, color: c.muted, marginTop: 72, ...r(500, 'fade') })}>
-        At temperature 0 with one right answer, every term but the first vanishes.
+      <p style={serif(34, { fontStyle: 'italic', fontWeight: 400, color: c.muted, marginTop: 96, ...r(500, 'fade') })}>
+        At temperature 0, only the first term survives.
       </p>
     </Frame>
   );
@@ -647,7 +588,7 @@ const Toolbox: Page = () => (
       <MapRow from="Unit test" to="Capability eval" delay={200} />
       <MapRow from="Integration test" to="End-to-end task eval" delay={320} />
       <MapRow from="Regression suite" to="Golden set" delay={440} />
-      <MapRow from="CI on every commit" to="Evals on every checkpoint & prompt" delay={560} />
+      <MapRow from="CI on every commit" to="Evals on every checkpoint" delay={560} />
     </div>
   </Frame>
 );
@@ -661,46 +602,31 @@ const ApiRow = ({ api, meaning, delay }: { api: string; meaning: string; delay: 
         display: 'grid',
         gridTemplateColumns: '680px 1fr',
         alignItems: 'center',
-        height: 84,
+        height: 96,
         borderTop: `1px solid ${c.rule}`,
         ...r(delay),
       }}
     >
-      <div style={{ fontFamily: mono,
-      fontFeatureSettings: '"calt" 0, "liga" 0', fontSize: 32, color: 'var(--osd-accent)' }}>{api}</div>
+      <div style={{ fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0', fontSize: 32, color: 'var(--osd-accent)' }}>{api}</div>
       <div style={{ fontSize: 32 }}>{meaning}</div>
     </div>
   );
 };
 
 const Pydantic: Page = () => {
-  const r = useReveal();
   return (
     <Frame>
       <Head eyebrow="In practice" title="Pydantic Evals, read as pytest." />
-      <blockquote
-        style={{
-          margin: '44px 0 0',
-          paddingLeft: 32,
-          borderLeft: '3px solid var(--osd-accent)',
-          ...r(160),
-        }}
-      >
-        <div style={serif(34, { fontStyle: 'italic', fontWeight: 400 })}>
-          “A useful metaphor (although not perfect) is to think of evals like a unit testing framework.”
-        </div>
-        <div style={{ fontSize: 24, color: c.muted, marginTop: 10 }}>— Pydantic Evals docs</div>
-      </blockquote>
-      <div style={{ display: 'grid', gridTemplateColumns: '680px 1fr', marginTop: 48, marginBottom: 12 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '680px 1fr', marginTop: 72, marginBottom: 12 }}>
         <Label style={{ color: 'var(--osd-accent)' }}>Pydantic Evals</Label>
         <Label>Unit testing</Label>
       </div>
       <div style={{ borderBottom: `1px solid ${c.rule}` }}>
-        <ApiRow api="Case" meaning="A test case: input → expected output" delay={260} />
-        <ApiRow api="Evaluator" meaning="An assertion that may return a score or label" delay={340} />
-        <ApiRow api="Dataset" meaning="A test suite with shared evaluators" delay={420} />
-        <ApiRow api="dataset.evaluate_sync(task)" meaning="Running pytest" delay={500} />
-        <ApiRow api="EvaluationReport" meaning="The pass / fail summary, now with scores" delay={580} />
+        <ApiRow api="Case" meaning="Test case" delay={260} />
+        <ApiRow api="Evaluator" meaning="Assertion, with scores" delay={340} />
+        <ApiRow api="Dataset" meaning="Test suite" delay={420} />
+        <ApiRow api="dataset.evaluate_sync(task)" meaning="pytest" delay={500} />
+        <ApiRow api="EvaluationReport" meaning="Test report" delay={580} />
       </div>
     </Frame>
   );
@@ -741,7 +667,7 @@ const BreakCard = ({
         background: c.surface,
         borderRadius: 'var(--osd-radius)',
         padding: '48px 40px',
-        height: 460,
+        height: 400,
         boxSizing: 'border-box',
         ...r(delay),
       }}
@@ -760,7 +686,7 @@ const Breaks: Page = () => (
       <BreakCard
         delay={200}
         title="Noise"
-        body="Same input, different output. Run it more than once."
+        body="Same input, different output."
         icon={
           <Icon>
             <path d="M4 32 L12 22 L18 40 L26 16 L32 44 L40 20 L46 38 L52 26 L60 32" />
@@ -770,7 +696,7 @@ const Breaks: Page = () => (
       <BreakCard
         delay={300}
         title="No spec"
-        body="The eval set often is the spec."
+        body="The eval set is the spec."
         icon={
           <Icon>
             <path d="M16 6 H40 L50 16 V58 H16 Z" strokeDasharray="5 5" />
@@ -781,7 +707,7 @@ const Breaks: Page = () => (
       <BreakCard
         delay={400}
         title="Goodhart"
-        body="Optimize a score long enough and it stops meaning anything."
+        body="Optimized scores stop meaning things."
         icon={
           <Icon>
             <circle cx="30" cy="34" r="24" />
@@ -794,7 +720,7 @@ const Breaks: Page = () => (
       <BreakCard
         delay={500}
         title="Leakage"
-        body="Your test set may already be in the training data."
+        body="The test set is in the training data."
         icon={
           <Icon>
             <circle cx="24" cy="32" r="18" />
@@ -841,33 +767,32 @@ const Toilet: Page = () => (
   <Frame>
     <Head
       eyebrow="Testing on the Toilet"
-      title="Four stall-tested tips, ported to evals."
-      sub="Google’s one-page testing tips, posted in its restroom stalls since 2006."
+      title="Google’s stall tips, ported to evals."
     />
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28, marginTop: 52 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28, marginTop: 80 }}>
       <TipCard
         delay={250}
         from="Mutation testing"
         title="Give graders a mutation score"
-        body="Seed known-bad answers. LLM judges miss over half."
+        body="Seed known-bad answers."
       />
       <TipCard
         delay={350}
         from="Change-detector tests"
         title="Spare the paraphrases"
-        body="A grader that fails a correct rewording is brittle."
+        body="Accept correct rewordings."
       />
       <TipCard
         delay={450}
         from="A/B diff testing"
         title="Run A vs A before A vs B"
-        body="Measure the noise floor before trusting a delta."
+        body="Know the noise floor first."
       />
       <TipCard
         delay={550}
         from="Verify state-changing calls"
         title="Grade writes, not reads"
-        body="Judge what the agent changed, not every step it took."
+        body="Judge outcomes, not steps."
       />
     </div>
   </Frame>
@@ -919,17 +844,17 @@ const Flips: Page = () => (
       <FlipRow delay={200} old="Tests have no tests." next="Graders must." />
       <FlipRow
         delay={900}
-        old="Flakiness is a bug. Fix it."
+        old="Fix flakiness."
         next={
           <>
-            Variance is the product. Report pass<sup style={{ fontSize: '0.6em' }}>k</sup>.
+            Report pass<sup style={{ fontSize: '0.6em' }}>k</sup>.
           </>
         }
       />
       <FlipRow
         delay={1600}
-        old="Tests should never change."
-        next="Models read their tests. Freeze the spec, rotate the items."
+        old="Never change tests."
+        next="Rotate the items."
       />
     </div>
   </Frame>
@@ -961,7 +886,7 @@ const Dashboard: Page = () => {
         <em style={{ color: c.inkMuted }}>is not a good model.</em>
       </h2>
       <p style={{ fontSize: 36, color: c.inkText, margin: '40px 0 0', ...r(400) }}>
-        Read the failures, not just the number.
+        Read the failures.
       </p>
       <div
         style={{
@@ -971,8 +896,7 @@ const Dashboard: Page = () => {
           top: 690,
           display: 'flex',
           justifyContent: 'space-between',
-          fontFamily: mono,
-      fontFeatureSettings: '"calt" 0, "liga" 0',
+          fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0',
           fontSize: 22,
           letterSpacing: '0.08em',
           color: c.inkMuted,
@@ -981,9 +905,6 @@ const Dashboard: Page = () => {
       >
         <span>
           PASS RATE <span style={{ color: c.inkAccent }}>92.2%</span> ▲ 0.4
-        </span>
-        <span>
-          <span style={{ color: c.red }}>■</span> 16 failures nobody opened
         </span>
       </div>
       <div
@@ -1046,8 +967,7 @@ const LoopStep = ({ n, title }: { n: number; title: string }) => {
             : {}),
         }}
       />
-      <span style={{ position: 'relative', fontFamily: mono,
-      fontFeatureSettings: '"calt" 0, "liga" 0', fontSize: 24, color: 'var(--osd-accent)' }}>
+      <span style={{ position: 'relative', fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0', fontSize: 24, color: 'var(--osd-accent)' }}>
         {String(n).padStart(2, '0')}
       </span>
       <span style={{ position: 'relative', ...serif(48) }}>{title}</span>
@@ -1082,7 +1002,7 @@ const Loop: Page = () => {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 600px', alignItems: 'center', marginTop: 12 }}>
         <div>
           <LoopStep n={1} title="Write the eval" />
-          <LoopStep n={2} title="Change the model or prompt" />
+          <LoopStep n={2} title="Change the model" />
           <LoopStep n={3} title="Run it" />
           <LoopStep n={4} title="Inspect failures" />
           <p
@@ -1143,16 +1063,14 @@ const Loop: Page = () => {
 };
 
 // ─── 12 · Habits ──────────────────────────────────────────────────────────────
-const Habit = ({ n, title, body, delay }: { n: string; title: string; body: string; delay: number }) => {
+const Habit = ({ n, title, delay }: { n: string; title: string; delay: number }) => {
   const r = useReveal();
   return (
-    <div style={{ borderTop: `1px solid ${c.rule}`, padding: '36px 0 40px', ...r(delay) }}>
+    <div style={{ borderTop: `1px solid ${c.rule}`, padding: '44px 0', ...r(delay) }}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 28 }}>
-        <span style={{ fontFamily: mono,
-      fontFeatureSettings: '"calt" 0, "liga" 0', fontSize: 22, color: 'var(--osd-accent)' }}>{n}</span>
+        <span style={{ fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0', fontSize: 22, color: 'var(--osd-accent)' }}>{n}</span>
         <span style={serif(48)}>{title}</span>
       </div>
-      <div style={{ fontSize: 30, color: c.muted, marginTop: 12, marginLeft: 58 }}>{body}</div>
     </div>
   );
 };
@@ -1169,9 +1087,9 @@ const Habits: Page = () => {
           </h2>
         </div>
         <div style={{ borderBottom: `1px solid ${c.rule}` }}>
-          <Habit delay={250} n="01" title="Eval-driven development" body="Write the eval before the prompt." />
-          <Habit delay={400} n="02" title="Version your evals" body="They are code. Review them like code." />
-          <Habit delay={550} n="03" title="Every bug becomes a case" body="A failure in prod is a new row in the set." />
+          <Habit delay={250} n="01" title="Eval-driven development" />
+          <Habit delay={400} n="02" title="Version your evals" />
+          <Habit delay={550} n="03" title="Every bug becomes a case" />
         </div>
       </div>
     </Frame>
@@ -1181,7 +1099,6 @@ const Habits: Page = () => {
 // ─── 13 · Closing ─────────────────────────────────────────────────────────────
 const Closing: Page = () => {
   const r = useReveal();
-  const on = useIsActivePage();
   return (
     <Frame dark>
       <div style={{ height: 846, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -1197,29 +1114,6 @@ const Closing: Page = () => {
         >
           No evals, <em style={{ color: c.inkAccent }}>no deploy.</em>
         </h1>
-        <p style={{ fontSize: 38, color: c.inkMuted, margin: '48px 0 0', ...r(400) }}>
-          You wouldn’t ship untested code. Don’t ship an unmeasured model.
-        </p>
-        <div style={{ marginTop: 96, fontFamily: mono,
-      fontFeatureSettings: '"calt" 0, "liga" 0', fontSize: 26, lineHeight: 1.8, ...r(900, 'fade') }}>
-          <div style={{ color: c.inkMuted }}>
-            <span style={{ color: c.inkAccent }}>$</span>{' '}
-            <span
-              style={{
-                ...(on ? { animation: `eot-type 900ms steps(20, end) 1000ms both` } : {}),
-              }}
-            >
-              deploy --model v2 --prod
-            </span>
-          </div>
-          <div style={{ color: c.red, ...r(2200, 'fade', 300) }}>
-            ✗ blocked: no eval report for this checkpoint
-            <span style={{ color: c.inkMuted, ...(on ? { animation: 'eot-blink 1.1s steps(1) infinite' } : {}) }}>
-              {' '}
-              ▍
-            </span>
-          </div>
-        </div>
       </div>
     </Frame>
   );
