@@ -13,50 +13,48 @@ import type { CSSProperties, ReactNode } from 'react';
 // ─── Panel-tweakable design tokens ────────────────────────────────────────────
 export const design: DesignSystem = {
   palette: {
-    bg: '#f5f2ea',
-    text: '#15171c',
-    accent: '#0e7a5b',
+    bg: '#0a0a0a',
+    text: '#ededed',
+    accent: '#52a8ff',
   },
   fonts: {
-    display: '"Newsreader", "Iowan Old Style", Georgia, serif',
-    body: '"Inter", system-ui, -apple-system, sans-serif',
+    display: '"Geist", "Inter", system-ui, -apple-system, sans-serif',
+    body: '"Geist", "Inter", system-ui, -apple-system, sans-serif',
   },
   typeScale: {
-    hero: 132,
+    hero: 150,
     body: 34,
   },
-  radius: 20,
+  radius: 12,
 };
 
 // ─── Local constants ──────────────────────────────────────────────────────────
 const c = {
-  muted: '#6e6b63',
-  faint: '#a9a395',
-  rule: '#dcd6c8',
-  surface: '#ece7dc',
-  red: '#c0412b',
-  ink: '#121418',
-  inkText: '#f2eee5',
-  inkMuted: '#8d8a82',
-  inkRule: '#2a2d33',
-  inkAccent: '#4cc393',
+  muted: '#929292',
+  dim: '#606060',
+  rule: '#292929',
+  surface: '#111111',
+  surfaceHi: '#171717',
+  bar: '#2e2e2e',
+  green: '#23703f',
+  red: '#e5484d',
 };
-const mono = '"JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace';
+const mono = '"Geist Mono", "JetBrains Mono", ui-monospace, Menlo, monospace';
+const condensed = '"Oswald", "Arial Narrow", Impact, sans-serif';
 const EASE = 'cubic-bezier(.2,.7,.2,1)';
 
 // ─── Fonts + keyframes, injected once ─────────────────────────────────────────
 const FONT_HREF =
-  'https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap';
+  'https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Oswald:wght@700&display=swap';
 const FONT_LINK_ID = 'osd-webfont-evals-on-the-toilet';
 const STYLE_ID = 'osd-style-evals-on-the-toilet';
 if (typeof document !== 'undefined') {
-  if (!document.getElementById(FONT_LINK_ID)) {
-    const link = document.createElement('link');
-    link.id = FONT_LINK_ID;
-    link.rel = 'stylesheet';
-    link.href = FONT_HREF;
-    document.head.appendChild(link);
-  }
+  document.getElementById(FONT_LINK_ID)?.remove();
+  const link = document.createElement('link');
+  link.id = FONT_LINK_ID;
+  link.rel = 'stylesheet';
+  link.href = FONT_HREF;
+  document.head.appendChild(link);
   if (!document.getElementById(STYLE_ID)) {
     const style = document.createElement('style');
     style.id = STYLE_ID;
@@ -130,131 +128,136 @@ const settle: SlideTransition = {
 // ─── Shared chrome ────────────────────────────────────────────────────────────
 const PAD = 128;
 
-const Footer = ({ dark }: { dark?: boolean }) => {
-  const { current, total } = useSlidePageNumber();
-  const color = dark ? c.inkMuted : c.faint;
+const monoText = (size: number, extra?: CSSProperties): CSSProperties => ({
+  fontFamily: mono,
+  fontFeatureSettings: '"calt" 0, "liga" 0',
+  fontSize: size,
+  ...extra,
+});
+
+const Footer = () => {
+  const { current } = useSlidePageNumber();
   return (
-    <>
-      {/* perforation — the only toilet joke in the deck */}
-      <svg
-        width={1920 - 2 * PAD}
-        height="2"
-        style={{ position: 'absolute', left: PAD, top: 986 }}
-        aria-hidden
-      >
-        <line
-          x1="0"
-          y1="1"
-          x2={1920 - 2 * PAD}
-          y2="1"
-          stroke={dark ? c.inkRule : c.rule}
-          strokeWidth="2"
-          strokeDasharray="14 12"
-        />
-      </svg>
-      <div
-        style={{
-          position: 'absolute',
-          left: PAD,
-          right: PAD,
-          top: 1010,
-          display: 'flex',
-          justifyContent: 'space-between',
-          fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0',
-          fontSize: 18,
-          letterSpacing: '0.16em',
-          textTransform: 'uppercase',
-          color,
-        }}
-      >
-        <span>Evals on the Toilet</span>
-        <span>
-          {String(current).padStart(2, '0')} / {String(total).padStart(2, '0')}
-        </span>
-      </div>
-    </>
+    <div
+      style={{
+        position: 'absolute',
+        left: PAD,
+        right: PAD,
+        top: 1000,
+        display: 'flex',
+        justifyContent: 'space-between',
+        ...monoText(18, { letterSpacing: '0.08em', textTransform: 'uppercase', color: c.dim }),
+      }}
+    >
+      <span>Evals on the Toilet</span>
+      <span>{String(current).padStart(2, '0')}</span>
+    </div>
   );
 };
 
-const Frame = ({ children, dark }: { children: ReactNode; dark?: boolean }) => (
+const Frame = ({ children }: { children: ReactNode }) => (
   <div
     style={{
       width: '100%',
       height: '100%',
       position: 'relative',
       overflow: 'hidden',
-      background: dark ? c.ink : 'var(--osd-bg)',
-      color: dark ? c.inkText : 'var(--osd-text)',
+      background: 'var(--osd-bg)',
+      color: 'var(--osd-text)',
       fontFamily: 'var(--osd-font-body)',
-      padding: `104px ${PAD}px 0`,
+      padding: `112px ${PAD}px 0`,
       boxSizing: 'border-box',
     }}
   >
     {children}
-    <Footer dark={dark} />
+    <Footer />
   </div>
 );
 
 const Eyebrow = ({ children, style }: { children: ReactNode; style?: CSSProperties }) => (
   <div
-    style={{
-      fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0',
-      fontSize: 22,
-      letterSpacing: '0.16em',
+    style={monoText(20, {
+      letterSpacing: '0.1em',
       textTransform: 'uppercase',
-      color: 'var(--osd-accent)',
+      color: c.muted,
       ...style,
-    }}
+    })}
   >
     {children}
   </div>
 );
 
-const Head = ({ eyebrow, title, sub }: { eyebrow: string; title: ReactNode; sub?: string }) => {
+/** Gray lead-in, white payoff — the two-tone headline. */
+const Dim = ({ children }: { children: ReactNode }) => <span style={{ color: c.muted }}>{children}</span>;
+
+const sans = (size: number, extra?: CSSProperties): CSSProperties => ({
+  fontFamily: 'var(--osd-font-display)',
+  fontWeight: 500,
+  fontSize: size,
+  lineHeight: 1.1,
+  letterSpacing: '-0.04em',
+  ...extra,
+});
+
+const Head = ({ eyebrow, title }: { eyebrow: string; title: ReactNode }) => {
   const r = useReveal();
   return (
     <div>
       <Eyebrow style={r(0, 'fade', 600)}>{eyebrow}</Eyebrow>
-      <h2
-        style={{
-          fontFamily: 'var(--osd-font-display)',
-          fontWeight: 500,
-          fontSize: 76,
-          lineHeight: 1.1,
-          letterSpacing: '-0.02em',
-          margin: '20px 0 0',
-          ...r(60),
-        }}
-      >
-        {title}
-      </h2>
-      {sub && (
-        <p style={{ fontSize: 30, color: c.muted, margin: '18px 0 0', ...r(160) }}>{sub}</p>
-      )}
+      <h2 style={sans(80, { margin: '24px 0 0', ...r(60) })}>{title}</h2>
     </div>
   );
 };
 
-const serif = (size: number, extra?: CSSProperties): CSSProperties => ({
-  fontFamily: 'var(--osd-font-display)',
-  fontWeight: 500,
-  fontSize: size,
-  lineHeight: 1.15,
-  letterSpacing: '-0.015em',
-  ...extra,
-});
-
 const Label = ({ children, style }: { children: ReactNode; style?: CSSProperties }) => (
   <div
-    style={{
-      fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0',
-      fontSize: 20,
-      letterSpacing: '0.14em',
+    style={monoText(18, {
+      letterSpacing: '0.1em',
       textTransform: 'uppercase',
-      color: c.faint,
+      color: c.dim,
+      ...style,
+    })}
+  >
+    {children}
+  </div>
+);
+
+/** Card with a code-editor title bar. */
+const Window = ({
+  title,
+  tag,
+  children,
+  style,
+}: {
+  title: string;
+  tag?: string;
+  children: ReactNode;
+  style?: CSSProperties;
+}) => (
+  <div
+    style={{
+      background: c.surface,
+      border: `1px solid ${c.rule}`,
+      borderRadius: 'var(--osd-radius)',
+      overflow: 'hidden',
       ...style,
     }}
   >
+    <div
+      style={{
+        height: 52,
+        display: 'grid',
+        gridTemplateColumns: '120px 1fr 120px',
+        alignItems: 'center',
+        padding: '0 22px',
+        borderBottom: `1px solid ${c.rule}`,
+        ...monoText(18, { color: c.dim }),
+      }}
+    >
+      <span style={{ letterSpacing: 6, color: c.bar, fontSize: 14 }}>●●●</span>
+      <span style={{ textAlign: 'center', color: c.muted }}>{title}</span>
+      <span style={{ textAlign: 'right' }}>{tag}</span>
+    </div>
     {children}
   </div>
 );
@@ -264,29 +267,48 @@ const Cover: Page = () => {
   const r = useReveal();
   return (
     <Frame>
-      <div
+      <h1
         style={{
-          height: 880,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
+          fontFamily: condensed,
+          fontWeight: 700,
+          fontSize: 'var(--osd-size-hero)',
+          lineHeight: 1,
+          letterSpacing: '-0.01em',
+          textTransform: 'uppercase',
+          margin: '48px 0 0',
+          ...r(0, 'up', 900),
         }}
       >
-        <h1
-          style={serif(132, {
-            fontWeight: 400,
-            lineHeight: 1.04,
-            letterSpacing: '-0.03em',
-            margin: 0,
-          })}
-        >
-          <span style={{ display: 'block', ...r(120, 'up', 900) }}>
-            Evals are to <em style={{ color: 'var(--osd-accent)' }}>models</em>
-          </span>
-          <span style={{ display: 'block', ...r(280, 'up', 900) }}>
-            what tests are to <em>software</em>.
-          </span>
-        </h1>
+        Evals on the Toilet
+      </h1>
+      <div style={{ position: 'absolute', left: PAD, top: 700, ...r(400) }}>
+        <div style={sans(64)}>Evals are to models</div>
+        <div style={sans(64, { color: c.muted })}>what tests are to software.</div>
+      </div>
+      {/* vertical hairline + rotated caption, right edge */}
+      <div
+        style={{
+          position: 'absolute',
+          right: PAD + 56,
+          top: 170,
+          height: 750,
+          width: 1,
+          background: c.rule,
+          transformOrigin: 'top',
+          ...r(300, 'grow', 1200),
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          right: PAD,
+          top: 690,
+          writingMode: 'vertical-rl',
+          ...monoText(18, { letterSpacing: '0.2em', color: c.dim }),
+          ...r(900, 'fade'),
+        }}
+      >
+        ASSERT → MEASURE
       </div>
     </Frame>
   );
@@ -294,37 +316,23 @@ const Cover: Page = () => {
 Cover.transition = settle;
 
 // ─── 02 · The analogy ─────────────────────────────────────────────────────────
-const AnalogyRow = ({
-  domain,
-  tool,
-  noun,
-  delay,
-  accent,
-}: {
-  domain: string;
-  tool: string;
-  noun: string;
-  delay: number;
-  accent?: boolean;
-}) => {
+const AnalogyRow = ({ domain, tool, noun, delay }: { domain: string; tool: string; noun: string; delay: number }) => {
   const r = useReveal();
   return (
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: '300px 420px 1fr',
+        gridTemplateColumns: '300px 460px 1fr',
         alignItems: 'baseline',
-        padding: '52px 0',
+        padding: '48px 0',
         borderTop: `1px solid ${c.rule}`,
         ...r(delay),
       }}
     >
       <Label>{domain}</Label>
-      <div style={serif(120, { fontWeight: 400, color: accent ? 'var(--osd-accent)' : undefined })}>
-        {tool}
-      </div>
-      <div style={{ fontSize: 38, lineHeight: 1.4, color: c.muted }}>
-        check the <span style={{ color: 'var(--osd-text)', fontWeight: 500 }}>{noun}</span>.
+      <div style={sans(128)}>{tool}</div>
+      <div style={{ fontSize: 40, color: c.muted, letterSpacing: '-0.02em' }}>
+        check the <span style={{ color: 'var(--osd-text)' }}>{noun}</span>.
       </div>
     </div>
   );
@@ -332,48 +340,31 @@ const AnalogyRow = ({
 
 const Analogy: Page = () => (
   <Frame>
-    <Head eyebrow="The analogy" title="Same job, different material." />
+    <Head
+      eyebrow="The analogy"
+      title={
+        <>
+          <Dim>Same job,</Dim> different material.
+        </>
+      }
+    />
     <div style={{ marginTop: 88, borderBottom: `1px solid ${c.rule}` }}>
       <AnalogyRow domain="Software" tool="Tests" noun="code" delay={250} />
-      <AnalogyRow domain="Models" tool="Evals" noun="model" delay={450} accent />
+      <AnalogyRow domain="Models" tool="Evals" noun="model" delay={450} />
     </div>
   </Frame>
 );
 
 // ─── 03 · Assert vs measure ───────────────────────────────────────────────────
-const Panel = ({ children, delay }: { children: ReactNode; delay: number }) => {
-  const r = useReveal();
-  return (
-    <div
-      style={{
-        background: c.surface,
-        borderRadius: 'var(--osd-radius)',
-        padding: '48px 56px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 36,
-        ...r(delay),
-      }}
-    >
-      {children}
-    </div>
-  );
-};
-
-const Code = ({ children }: { children: ReactNode }) => (
-  <div style={{ fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0', fontSize: 36, color: 'var(--osd-text)' }}>{children}</div>
-);
-
 const Pill = ({ children, on }: { children: ReactNode; on?: boolean }) => (
   <div
     style={{
-      fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0',
-      fontSize: 30,
-      padding: '18px 44px',
+      ...monoText(28),
+      padding: '16px 40px',
       borderRadius: 999,
-      background: on ? 'var(--osd-accent)' : 'transparent',
-      color: on ? '#fff' : c.faint,
-      border: `2px solid ${on ? 'var(--osd-accent)' : c.rule}`,
+      background: on ? 'var(--osd-text)' : 'transparent',
+      color: on ? 'var(--osd-bg)' : c.dim,
+      border: `1px solid ${on ? 'var(--osd-text)' : c.rule}`,
     }}
   >
     {children}
@@ -395,15 +386,15 @@ const Histogram = () => {
             style={{
               flex: 1,
               height: `${h * 100}%`,
-              background: '#cdc6b7',
-              borderRadius: '6px 6px 0 0',
+              background: c.bar,
+              borderRadius: '4px 4px 0 0',
               transformOrigin: 'bottom',
               ...r(500 + i * 45, 'grow', 600),
             }}
           />
         ))}
       </div>
-      <div style={{ height: 2, background: c.faint }} />
+      <div style={{ height: 1, background: c.dim }} />
       <div
         style={{
           position: 'absolute',
@@ -419,10 +410,8 @@ const Histogram = () => {
           position: 'absolute',
           left: '58%',
           top: -40,
-          fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0',
-          fontSize: 22,
-          color: 'var(--osd-accent)',
           transform: 'translateX(-50%)',
+          ...monoText(22, { color: 'var(--osd-accent)' }),
           ...r(1300, 'fade'),
         }}
       >
@@ -432,74 +421,72 @@ const Histogram = () => {
   );
 };
 
-const PanelCaption = ({ big }: { big: string }) => <div style={serif(44)}>{big}</div>;
-
-const AssertMeasure: Page = () => (
-  <Frame>
-    <Head
-      eyebrow="The difference"
-      title={
-        <>
-          Tests <em style={{ fontWeight: 400 }}>assert.</em> Evals{' '}
-          <em style={{ fontWeight: 400, color: 'var(--osd-accent)' }}>measure.</em>
-        </>
-      }
-    />
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, marginTop: 72 }}>
-      <Panel delay={200}>
-        <Code>assert f(x) == y</Code>
-        <div style={{ height: 210, display: 'flex', alignItems: 'center', gap: 24 }}>
-          <Pill on>pass</Pill>
-          <Pill>fail</Pill>
-        </div>
-        <PanelCaption big="A verdict." />
-      </Panel>
-      <Panel delay={380}>
-        <Code>
-          score(model, D) <span style={{ color: c.faint }}>→</span> 0.87
-        </Code>
-        <Histogram />
-        <PanelCaption big="A distribution." />
-      </Panel>
-    </div>
-  </Frame>
+const PanelBody = ({ children }: { children: ReactNode }) => (
+  <div style={{ padding: '44px 52px 48px', display: 'flex', flexDirection: 'column', gap: 36 }}>{children}</div>
 );
 
+const Code = ({ children }: { children: ReactNode }) => <div style={monoText(32)}>{children}</div>;
+
+const AssertMeasure: Page = () => {
+  const r = useReveal();
+  return (
+    <Frame>
+      <Head
+        eyebrow="The difference"
+        title={
+          <>
+            <Dim>Tests assert.</Dim> Evals measure.
+          </>
+        }
+      />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, marginTop: 72 }}>
+        <Window title="test_model.py" tag="PY" style={r(200)}>
+          <PanelBody>
+            <Code>assert f(x) == y</Code>
+            <div style={{ height: 210, display: 'flex', alignItems: 'center', gap: 20 }}>
+              <Pill on>pass</Pill>
+              <Pill>fail</Pill>
+            </div>
+            <div style={sans(44)}>A verdict.</div>
+          </PanelBody>
+        </Window>
+        <Window title="eval_model.py" tag="PY" style={r(380)}>
+          <PanelBody>
+            <Code>
+              score(model, D) <span style={{ color: c.dim }}>→</span> 0.87
+            </Code>
+            <Histogram />
+            <div style={sans(44)}>A distribution.</div>
+          </PanelBody>
+        </Window>
+      </div>
+    </Frame>
+  );
+};
+
 // ─── 04 · Expansion ───────────────────────────────────────────────────────────
-const Term = ({
-  term,
-  title,
-  lead,
-}: {
-  term: ReactNode;
-  title: string;
-  lead?: boolean;
-}) => (
-  <div style={{ borderTop: `2px solid ${lead ? 'var(--osd-accent)' : c.rule}`, paddingTop: 36 }}>
-    <div
-      style={serif(64, {
-        fontWeight: 400,
-        fontStyle: 'italic',
-        height: 80,
-        color: lead ? 'var(--osd-accent)' : 'var(--osd-text)',
-      })}
-    >
-      {term}
-    </div>
-    <div style={serif(42, { marginTop: 36, color: lead ? 'var(--osd-accent)' : c.muted })}>{title}</div>
+const Term = ({ term, title, lead }: { term: ReactNode; title: string; lead?: boolean }) => (
+  <div style={{ borderTop: `1px solid ${lead ? 'var(--osd-text)' : c.rule}`, paddingTop: 36 }}>
+    <div style={sans(64, { height: 80, color: lead ? 'var(--osd-text)' : c.muted })}>{term}</div>
+    <Label style={{ marginTop: 32, color: lead ? 'var(--osd-text)' : c.dim }}>{title}</Label>
   </div>
 );
 
-const Plus = () => <span style={{ color: c.faint, fontStyle: 'normal', marginRight: 14 }}>+</span>;
+const Plus = () => <span style={{ color: c.dim, marginRight: 14 }}>+</span>;
 
 const Expansion: Page = () => {
   const r = useReveal();
   return (
     <Frame>
-      <Head eyebrow="A Taylor series, loosely" title="Evals, expanded around tests." />
-      <div style={serif(40, { fontStyle: 'italic', fontWeight: 400, color: c.muted, marginTop: 60, ...r(200) })}>
-        Eval(m) ≈
-      </div>
+      <Head
+        eyebrow="A Taylor series, loosely"
+        title={
+          <>
+            <Dim>Evals,</Dim> expanded around tests.
+          </>
+        }
+      />
+      <div style={monoText(26, { color: c.dim, marginTop: 72, ...r(200) })}>eval(m) ≈</div>
       <div
         style={{
           display: 'grid',
@@ -545,7 +532,7 @@ const Expansion: Page = () => {
           </Step>
         </Steps>
       </div>
-      <p style={serif(34, { fontStyle: 'italic', fontWeight: 400, color: c.muted, marginTop: 96, ...r(500, 'fade') })}>
+      <p style={{ fontSize: 32, color: c.muted, letterSpacing: '-0.02em', marginTop: 112, ...r(500, 'fade') }}>
         At temperature 0, only the first term survives.
       </p>
     </Frame>
@@ -566,29 +553,36 @@ const MapRow = ({ from, to, delay }: { from: string; to: string; delay: number }
         ...r(delay),
       }}
     >
-      <div style={serif(46, { fontWeight: 400, color: c.muted })}>{from}</div>
+      <div style={sans(46, { color: c.muted })}>{from}</div>
       <svg width="140" height="16" viewBox="0 0 140 16" aria-hidden>
         <path
           d="M0 8 H134 M126 1 L136 8 L126 15"
           fill="none"
-          stroke="var(--osd-accent)"
+          stroke={c.dim}
           strokeWidth="2"
           pathLength={1}
           strokeDasharray="1"
           style={r(delay + 200, 'draw', 600)}
         />
       </svg>
-      <div style={serif(46)}>{to}</div>
+      <div style={sans(46)}>{to}</div>
     </div>
   );
 };
 
 const Toolbox: Page = () => (
   <Frame>
-    <Head eyebrow="The mapping" title="Same toolbox, new material." />
+    <Head
+      eyebrow="The mapping"
+      title={
+        <>
+          <Dim>Same toolbox,</Dim> new material.
+        </>
+      }
+    />
     <div style={{ display: 'grid', gridTemplateColumns: '840px 1fr', marginTop: 72, marginBottom: 20 }}>
       <Label>In software</Label>
-      <Label style={{ color: 'var(--osd-accent)' }}>In evals</Label>
+      <Label style={{ color: 'var(--osd-text)' }}>In evals</Label>
     </div>
     <div style={{ borderBottom: `1px solid ${c.rule}` }}>
       <MapRow from="Unit test" to="Capability eval" delay={200} />
@@ -606,34 +600,49 @@ const ApiRow = ({ api, meaning, delay }: { api: string; meaning: string; delay: 
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: '680px 1fr',
+        gridTemplateColumns: '760px 1fr',
         alignItems: 'center',
-        height: 96,
+        height: 88,
+        padding: '0 48px',
         borderTop: `1px solid ${c.rule}`,
         ...r(delay),
       }}
     >
-      <div style={{ fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0', fontSize: 32, color: 'var(--osd-accent)' }}>{api}</div>
-      <div style={{ fontSize: 32 }}>{meaning}</div>
+      <div style={monoText(30)}>{api}</div>
+      <div style={{ fontSize: 32, color: c.muted, letterSpacing: '-0.02em' }}>{meaning}</div>
     </div>
   );
 };
 
 const Pydantic: Page = () => {
+  const r = useReveal();
   return (
     <Frame>
-      <Head eyebrow="In practice" title="Pydantic Evals, read as pytest." />
-      <div style={{ display: 'grid', gridTemplateColumns: '680px 1fr', marginTop: 72, marginBottom: 12 }}>
-        <Label style={{ color: 'var(--osd-accent)' }}>Pydantic Evals</Label>
-        <Label>Unit testing</Label>
-      </div>
-      <div style={{ borderBottom: `1px solid ${c.rule}` }}>
+      <Head
+        eyebrow="In practice"
+        title={
+          <>
+            <Dim>Pydantic Evals,</Dim> read as pytest.
+          </>
+        }
+      />
+      <Window title="pydantic_evals  ↔  pytest" style={{ marginTop: 64, ...r(160) }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '760px 1fr',
+            padding: '22px 48px',
+          }}
+        >
+          <Label>Pydantic Evals</Label>
+          <Label>Unit testing</Label>
+        </div>
         <ApiRow api="Case" meaning="Test case" delay={260} />
         <ApiRow api="Evaluator" meaning="Assertion, with scores" delay={340} />
         <ApiRow api="Dataset" meaning="Test suite" delay={420} />
         <ApiRow api="dataset.evaluate_sync(task)" meaning="pytest" delay={500} />
         <ApiRow api="EvaluationReport" meaning="Test report" delay={580} />
-      </div>
+      </Window>
     </Frame>
   );
 };
@@ -645,8 +654,8 @@ const Icon = ({ children }: { children: ReactNode }) => (
     height="64"
     viewBox="0 0 64 64"
     fill="none"
-    stroke="var(--osd-accent)"
-    strokeWidth="2.5"
+    stroke="var(--osd-text)"
+    strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
     aria-hidden
@@ -655,40 +664,44 @@ const Icon = ({ children }: { children: ReactNode }) => (
   </svg>
 );
 
-const BreakCard = ({
-  icon,
-  title,
-  body,
-  delay,
-}: {
-  icon: ReactNode;
-  title: string;
-  body: string;
-  delay: number;
-}) => {
+const Card = ({ children, delay, style }: { children: ReactNode; delay: number; style?: CSSProperties }) => {
   const r = useReveal();
   return (
     <div
       style={{
         background: c.surface,
+        border: `1px solid ${c.rule}`,
         borderRadius: 'var(--osd-radius)',
-        padding: '48px 40px',
-        height: 400,
-        boxSizing: 'border-box',
+        ...style,
         ...r(delay),
       }}
     >
-      {icon}
-      <div style={serif(50, { marginTop: 48 })}>{title}</div>
-      <div style={{ fontSize: 29, lineHeight: 1.5, color: c.muted, marginTop: 18 }}>{body}</div>
+      {children}
     </div>
   );
 };
 
+const BreakCard = ({ icon, title, body, delay }: { icon: ReactNode; title: string; body: string; delay: number }) => (
+  <Card delay={delay} style={{ padding: '48px 40px', height: 400, boxSizing: 'border-box' }}>
+    {icon}
+    <div style={sans(50, { marginTop: 48 })}>{title}</div>
+    <div style={{ fontSize: 29, lineHeight: 1.45, color: c.muted, marginTop: 16, letterSpacing: '-0.01em' }}>
+      {body}
+    </div>
+  </Card>
+);
+
 const Breaks: Page = () => (
   <Frame>
-    <Head eyebrow="Caveats" title="Where the analogy breaks." />
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 32, marginTop: 80 }}>
+    <Head
+      eyebrow="Caveats"
+      title={
+        <>
+          <Dim>Where the analogy</Dim> breaks.
+        </>
+      }
+    />
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 28, marginTop: 80 }}>
       <BreakCard
         delay={200}
         title="Noise"
@@ -740,40 +753,23 @@ const Breaks: Page = () => (
 );
 
 // ─── 08 · Testing on the Toilet ───────────────────────────────────────────────
-const TipCard = ({
-  from,
-  title,
-  body,
-  delay,
-}: {
-  from: string;
-  title: string;
-  body: string;
-  delay: number;
-}) => {
-  const r = useReveal();
-  return (
-    <div
-      style={{
-        border: `1px solid ${c.rule}`,
-        borderRadius: 'var(--osd-radius)',
-        padding: '34px 44px',
-        background: '#faf8f3',
-        ...r(delay),
-      }}
-    >
-      <Label style={{ fontSize: 18 }}>← {from}</Label>
-      <div style={serif(42, { marginTop: 16 })}>{title}</div>
-      <div style={{ fontSize: 28, lineHeight: 1.45, color: c.muted, marginTop: 12 }}>{body}</div>
-    </div>
-  );
-};
+const TipCard = ({ from, title, body, delay }: { from: string; title: string; body: string; delay: number }) => (
+  <Card delay={delay} style={{ padding: '36px 44px' }}>
+    <Label>← {from}</Label>
+    <div style={sans(44, { marginTop: 18 })}>{title}</div>
+    <div style={{ fontSize: 29, color: c.muted, marginTop: 10, letterSpacing: '-0.01em' }}>{body}</div>
+  </Card>
+);
 
 const Toilet: Page = () => (
   <Frame>
     <Head
       eyebrow="Testing on the Toilet"
-      title="Google’s stall tips, ported to evals."
+      title={
+        <>
+          <Dim>Google’s stall tips,</Dim> ported to evals.
+        </>
+      }
     />
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28, marginTop: 80 }}>
       <TipCard
@@ -788,12 +784,7 @@ const Toilet: Page = () => (
         title="Spare the paraphrases"
         body="Accept correct rewordings."
       />
-      <TipCard
-        delay={450}
-        from="A/B diff testing"
-        title="Run A vs A before A vs B"
-        body="Know the noise floor first."
-      />
+      <TipCard delay={450} from="A/B diff testing" title="Run A vs A before A vs B" body="Know the noise floor first." />
       <TipCard
         delay={550}
         from="Verify state-changing calls"
@@ -817,8 +808,8 @@ const FlipRow = ({ old, next, delay }: { old: string; next: ReactNode; delay: nu
         borderTop: `1px solid ${c.rule}`,
       }}
     >
-      <div style={{ ...r(delay, 'fade') }}>
-        <span style={{ position: 'relative', ...serif(42, { fontWeight: 400, color: c.faint }) }}>
+      <div style={r(delay, 'fade')}>
+        <span style={{ position: 'relative', ...sans(46, { color: c.dim }) }}>
           {old}
           <span
             style={{
@@ -834,17 +825,24 @@ const FlipRow = ({ old, next, delay }: { old: string; next: ReactNode; delay: nu
           />
         </span>
       </div>
-      <div style={serif(42, { lineHeight: 1.3, ...r(delay + 800) })}>{next}</div>
+      <div style={sans(46, r(delay + 800))}>{next}</div>
     </div>
   );
 };
 
 const Flips: Page = () => (
   <Frame>
-    <Head eyebrow="Inversions" title="Where Google’s rules flip." />
+    <Head
+      eyebrow="Inversions"
+      title={
+        <>
+          <Dim>Where Google’s rules</Dim> flip.
+        </>
+      }
+    />
     <div style={{ display: 'grid', gridTemplateColumns: '700px 1fr', marginTop: 72, marginBottom: 16 }}>
       <Label>In software</Label>
-      <Label style={{ color: 'var(--osd-accent)' }}>In evals</Label>
+      <Label style={{ color: 'var(--osd-text)' }}>In evals</Label>
     </div>
     <div style={{ borderBottom: `1px solid ${c.rule}` }}>
       <FlipRow delay={200} old="Tests have no tests." next="Graders must." />
@@ -857,11 +855,7 @@ const Flips: Page = () => (
           </>
         }
       />
-      <FlipRow
-        delay={1600}
-        old="Never change tests."
-        next="Rotate the items."
-      />
+      <FlipRow delay={1600} old="Never change tests." next="Rotate the items." />
     </div>
   </Frame>
 );
@@ -876,49 +870,33 @@ const Dashboard: Page = () => {
   const on = useIsActivePage();
   const cells = Array.from({ length: COLS * ROWS }, (_, i) => i);
   return (
-    <Frame dark>
-      <Eyebrow style={{ color: c.inkAccent, ...r(0, 'fade') }}>A warning</Eyebrow>
-      <h2
-        style={serif(112, {
-          fontWeight: 400,
-          lineHeight: 1.05,
-          letterSpacing: '-0.03em',
-          margin: '28px 0 0',
-          ...r(100, 'up', 900),
-        })}
-      >
+    <Frame>
+      <Eyebrow style={r(0, 'fade')}>A warning</Eyebrow>
+      <h2 style={sans(112, { lineHeight: 1.02, margin: '28px 0 0', ...r(100, 'up', 900) })}>
         A green dashboard
         <br />
-        <em style={{ color: c.inkMuted }}>is not a good model.</em>
+        <Dim>is not a good model.</Dim>
       </h2>
-      <p style={{ fontSize: 36, color: c.inkText, margin: '40px 0 0', ...r(400) }}>
+      <p style={{ fontSize: 36, color: c.muted, margin: '40px 0 0', letterSpacing: '-0.02em', ...r(400) }}>
         Read the failures.
       </p>
       <div
         style={{
           position: 'absolute',
           left: PAD,
-          right: PAD,
           top: 690,
-          display: 'flex',
-          justifyContent: 'space-between',
-          fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0',
-          fontSize: 22,
-          letterSpacing: '0.08em',
-          color: c.inkMuted,
+          ...monoText(20, { letterSpacing: '0.08em', color: c.dim }),
           ...r(600, 'fade'),
         }}
       >
-        <span>
-          PASS RATE <span style={{ color: c.inkAccent }}>92.2%</span> ▲ 0.4
-        </span>
+        PASS RATE <span style={{ color: 'var(--osd-text)' }}>92.2%</span> ▲ 0.4
       </div>
       <div
         style={{
           position: 'absolute',
           left: PAD,
           right: PAD,
-          top: 748,
+          top: 740,
           display: 'grid',
           gridTemplateColumns: `repeat(${COLS}, 1fr)`,
           gap: 10,
@@ -930,10 +908,12 @@ const Dashboard: Page = () => {
             style={{
               height: 30,
               borderRadius: 4,
-              background: isFail(i) ? c.red : '#1f6b52',
+              background: isFail(i) ? c.red : c.green,
               ...r(700 + (i % COLS) * 22, 'fade', 400),
               ...(on && isFail(i)
-                ? { animation: `eot-fade 400ms ${EASE} ${700 + (i % COLS) * 22}ms both, eot-pulse 2.4s ease-in-out 2200ms infinite` }
+                ? {
+                    animation: `eot-fade 400ms ${EASE} ${700 + (i % COLS) * 22}ms both, eot-pulse 2.4s ease-in-out 2200ms infinite`,
+                  }
                 : {}),
             }}
           />
@@ -957,7 +937,7 @@ const LoopStep = ({ n, title }: { n: number; title: string }) => {
         display: 'flex',
         alignItems: 'baseline',
         gap: 32,
-        padding: '26px 32px',
+        padding: '24px 32px',
         ...r(150 + n * 100),
       }}
     >
@@ -966,32 +946,24 @@ const LoopStep = ({ n, title }: { n: number; title: string }) => {
           position: 'absolute',
           inset: 0,
           borderRadius: 'var(--osd-radius)',
-          background: c.surface,
+          background: c.surfaceHi,
+          border: `1px solid ${c.rule}`,
           opacity: 0,
           ...(on
             ? { animation: `eot-hl ${LOOP_S}s ease-in-out ${((n - 1) * LOOP_S) / 4 + 1.2 - 0.64}s infinite` }
             : {}),
         }}
       />
-      <span style={{ position: 'relative', fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0', fontSize: 24, color: 'var(--osd-accent)' }}>
-        {String(n).padStart(2, '0')}
-      </span>
-      <span style={{ position: 'relative', ...serif(48) }}>{title}</span>
+      <span style={{ position: 'relative', ...monoText(22, { color: c.dim }) }}>{String(n).padStart(2, '0')}</span>
+      <span style={{ position: 'relative', ...sans(50) }}>{title}</span>
     </div>
   );
 };
 
 const LoopNode = ({ x, y, n }: { x: number; y: number; n: number }) => (
   <g>
-    <circle cx={x} cy={y} r="30" fill="var(--osd-bg)" stroke={c.faint} strokeWidth="2" />
-    <text
-      x={x}
-      y={y + 8}
-      textAnchor="middle"
-      fontFamily={mono}
-      fontSize="22"
-      fill="var(--osd-text)"
-    >
+    <circle cx={x} cy={y} r="30" fill="var(--osd-bg)" stroke={c.dim} strokeWidth="1.5" />
+    <text x={x} y={y + 7} textAnchor="middle" fontFamily={mono} fontSize="20" fill="var(--osd-text)">
       {String(n).padStart(2, '0')}
     </text>
   </g>
@@ -1004,27 +976,26 @@ const Loop: Page = () => {
   const R = 210;
   return (
     <Frame>
-      <Head eyebrow="The workflow" title="The eval loop." />
+      <Head
+        eyebrow="The workflow"
+        title={
+          <>
+            <Dim>The eval</Dim> loop.
+          </>
+        }
+      />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 600px', alignItems: 'center', marginTop: 12 }}>
         <div>
           <LoopStep n={1} title="Write the eval" />
           <LoopStep n={2} title="Change the model" />
           <LoopStep n={3} title="Run it" />
           <LoopStep n={4} title="Inspect failures" />
-          <p
-            style={serif(38, {
-              fontStyle: 'italic',
-              fontWeight: 400,
-              color: 'var(--osd-accent)',
-              margin: '44px 0 0 32px',
-              ...r(800, 'fade'),
-            })}
-          >
+          <p style={{ fontSize: 34, color: c.muted, letterSpacing: '-0.02em', margin: '44px 0 0 32px', ...r(800, 'fade') }}>
             Repeat until the failures are boring.
           </p>
         </div>
         <svg width="600" height="600" viewBox="0 0 560 560" style={r(200, 'fade', 900)} aria-hidden>
-          <circle cx={C} cy={C} r={R} fill="none" stroke={c.rule} strokeWidth="2" strokeDasharray="4 10" />
+          <circle cx={C} cy={C} r={R} fill="none" stroke={c.dim} strokeWidth="1.5" strokeDasharray="4 10" />
           <g
             style={{
               transformBox: 'view-box',
@@ -1040,12 +1011,12 @@ const Loop: Page = () => {
               fill="none"
               stroke="var(--osd-accent)"
               strokeOpacity="0.45"
-              strokeWidth="4"
+              strokeWidth="3"
               strokeLinecap="round"
               strokeDasharray={`${2 * Math.PI * R * 0.12} 4000`}
               transform={`rotate(${-90 - 0.12 * 360} ${C} ${C})`}
             />
-            <circle cx={C} cy={C - R} r="12" fill="var(--osd-accent)" />
+            <circle cx={C} cy={C - R} r="10" fill="var(--osd-accent)" />
           </g>
           <LoopNode x={C} y={C - R} n={1} />
           <LoopNode x={C + R} y={C} n={2} />
@@ -1053,14 +1024,14 @@ const Loop: Page = () => {
           <LoopNode x={C - R} y={C} n={4} />
           <text
             x={C}
-            y={C + 12}
+            y={C + 8}
             textAnchor="middle"
-            fontFamily='"Newsreader", Georgia, serif'
-            fontStyle="italic"
-            fontSize="40"
-            fill={c.faint}
+            fontFamily={mono}
+            fontSize="20"
+            letterSpacing="4"
+            fill={c.dim}
           >
-            repeat
+            REPEAT
           </text>
         </svg>
       </div>
@@ -1072,11 +1043,18 @@ const Loop: Page = () => {
 const Habit = ({ n, title, delay }: { n: string; title: string; delay: number }) => {
   const r = useReveal();
   return (
-    <div style={{ borderTop: `1px solid ${c.rule}`, padding: '44px 0', ...r(delay) }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 28 }}>
-        <span style={{ fontFamily: mono, fontFeatureSettings: '"calt" 0, "liga" 0', fontSize: 22, color: 'var(--osd-accent)' }}>{n}</span>
-        <span style={serif(48)}>{title}</span>
-      </div>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'baseline',
+        gap: 40,
+        borderTop: `1px solid ${c.rule}`,
+        padding: '36px 0',
+        ...r(delay),
+      }}
+    >
+      <span style={monoText(22, { color: c.dim })}>{n}</span>
+      <span style={sans(88)}>{title}</span>
     </div>
   );
 };
@@ -1085,18 +1063,11 @@ const Habits: Page = () => {
   const r = useReveal();
   return (
     <Frame>
-      <div style={{ height: 846, display: 'grid', gridTemplateColumns: '620px 1fr', gap: 96, alignItems: 'center' }}>
-        <div>
-          <Eyebrow style={r(0, 'fade')}>Habits</Eyebrow>
-          <h2 style={serif(92, { fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.025em', margin: '28px 0 0', ...r(80) })}>
-            Worth stealing <em style={{ color: 'var(--osd-accent)' }}>from software.</em>
-          </h2>
-        </div>
-        <div style={{ borderBottom: `1px solid ${c.rule}` }}>
-          <Habit delay={250} n="01" title="Eval-driven development" />
-          <Habit delay={400} n="02" title="Version your evals" />
-          <Habit delay={550} n="03" title="Every bug becomes a case" />
-        </div>
+      <Eyebrow style={{ marginTop: 40, ...r(0, 'fade') }}>Habits worth stealing from software</Eyebrow>
+      <div style={{ marginTop: 56 }}>
+        <Habit delay={150} n="01" title="Eval-driven development" />
+        <Habit delay={300} n="02" title="Version your evals" />
+        <Habit delay={450} n="03" title="Every bug becomes a case" />
       </div>
     </Frame>
   );
@@ -1106,19 +1077,21 @@ const Habits: Page = () => {
 const Closing: Page = () => {
   const r = useReveal();
   return (
-    <Frame dark>
-      <div style={{ height: 846, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <Eyebrow style={{ color: c.inkAccent, ...r(0, 'fade') }}>The rule</Eyebrow>
+    <Frame>
+      <div style={{ height: 820, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <h1
-          style={serif(180, {
-            fontWeight: 400,
+          style={{
+            fontFamily: condensed,
+            fontWeight: 700,
+            fontSize: 220,
             lineHeight: 1,
-            letterSpacing: '-0.035em',
-            margin: '36px 0 0',
-            ...r(100, 'up', 900),
-          })}
+            letterSpacing: '-0.01em',
+            textTransform: 'uppercase',
+            margin: 0,
+          }}
         >
-          No evals, <em style={{ color: c.inkAccent }}>no deploy.</em>
+          <span style={{ display: 'block', ...r(100, 'up', 900) }}>No evals,</span>
+          <span style={{ display: 'block', color: c.muted, ...r(350, 'up', 900) }}>no deploy.</span>
         </h1>
       </div>
     </Frame>
