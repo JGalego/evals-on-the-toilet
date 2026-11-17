@@ -10,13 +10,13 @@
     "sync:skills": "open-slide sync:skills"
   },
   "dependencies": {
-    "@open-slide/core": "^1.17.1",
+    "@open-slide/core": "^2.3.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "vite": "^5.4.10"
+    "vite": "^8.3.8"
   }
 }

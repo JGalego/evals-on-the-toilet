@@ -25,8 +25,8 @@ Keep this file short: hard rules only. All deeper guidance lives in the skills a
 The skills above are managed by `@open-slide/core`. Do not edit them in place. To pull the latest versions:
 
 ```
-pnpm up @open-slide/core
-pnpm sync:skills
+npm update @open-slide/core
+npm run sync:skills
 ```
 
-`pnpm dev` will also detect drift on startup and offer to sync. `pnpm sync:skills --dry-run` (via `pnpm exec open-slide sync:skills --dry-run`) previews changes without writing.
+`npm run dev` will also detect drift on startup and offer to sync. `npx open-slide sync:skills --dry-run` previews changes without writing.

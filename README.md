@@ -6,8 +6,8 @@ A 13-page talk built with [open-slide](https://github.com/open-slide/open-slide)
 ## Run it
 
 ```bash
-pnpm install
-pnpm dev        # http://localhost:5173/s/evals-on-the-toilet
+npm install
+npm run dev       # http://localhost:5173/s/evals-on-the-toilet
 ```
 
 Press `F` for fullscreen and `→` / `←` to move between pages. On page 4, `→` reveals the terms of the expansion one at a time.
@@ -15,6 +15,6 @@ Press `F` for fullscreen and `→` / `←` to move between pages. On page 4, `�
 ## Build
 
 ```bash
-pnpm build      # static site in dist/
-pnpm preview
+npm run build     # static site in dist/
+npm run preview
 ```
