@@ -9,6 +9,9 @@ import {
   useSlidePageNumber,
 } from '@open-slide/core';
 import type { CSSProperties, ReactNode } from 'react';
+import logo from '@assets/logo.svg';
+import book from './assets/how-google-tests-software.jpg';
+import stall from './assets/tott-stall.jpg';
 
 // ─── Panel-tweakable design tokens ────────────────────────────────────────────
 export const design: DesignSystem = {
@@ -63,7 +66,6 @@ if (typeof document !== 'undefined') {
       @keyframes eot-fade  { from { opacity: 0; } to { opacity: 1; } }
       @keyframes eot-draw  { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
       @keyframes eot-grow  { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-      @keyframes eot-growx { from { transform: scaleX(0); } to { transform: scaleX(1); } }
       @keyframes eot-spin  { to { transform: rotate(360deg); } }
       @keyframes eot-hl    { 0%, 16% { opacity: 1; } 24%, 92% { opacity: 0; } 100% { opacity: 1; } }
       @keyframes eot-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
@@ -285,6 +287,19 @@ const Cover: Page = () => {
         <div style={sans(64)}>Evals are to models</div>
         <div style={sans(64, { color: c.muted })}>what tests are to software.</div>
       </div>
+      {/* one slot, 24 universes: the same animated toilet as the README */}
+      <img
+        src={logo}
+        alt="A white toilet that keeps shifting between art styles"
+        style={{
+          position: 'absolute',
+          right: PAD + 112,
+          top: 441,
+          width: 400,
+          height: 400,
+          ...r(600, 'fade', 900),
+        }}
+      />
       {/* vertical hairline + rotated caption, right edge */}
       <div
         style={{
@@ -315,7 +330,66 @@ const Cover: Page = () => {
 };
 Cover.transition = settle;
 
-// ─── 02 · The analogy ─────────────────────────────────────────────────────────
+// ─── 02 · Origin ──────────────────────────────────────────────────────────────
+const Photo = ({ src, alt, width, delay }: { src: string; alt: string; width: number; delay: number }) => {
+  const r = useReveal();
+  return (
+    <img
+      src={src}
+      alt={alt}
+      style={{
+        width,
+        height: 620,
+        objectFit: 'cover',
+        borderRadius: 'var(--osd-radius)',
+        border: `1px solid ${c.rule}`,
+        ...r(delay),
+      }}
+    />
+  );
+};
+
+const Origin: Page = () => {
+  const r = useReveal();
+  return (
+    <Frame>
+      <Head
+        eyebrow="Where the name comes from"
+        title={
+          <>
+            <Dim>Borrowed from</Dim> Google.
+          </>
+        }
+      />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 471px 470px', gap: 64, marginTop: 80, height: 620 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div style={r(250)}>
+            <Label>Testing → Tech on the Toilet</Label>
+            <div style={{ fontSize: 38, lineHeight: 1.3, letterSpacing: '-0.02em', marginTop: 16 }}>
+              A weekly one-pager in Google’s bathroom stalls.
+            </div>
+          </div>
+          <div style={r(450)}>
+            <Label>The books</Label>
+            <div style={sans(40, { marginTop: 16 })}>How Google Tests Software</div>
+            <div style={{ fontSize: 28, color: c.muted, marginTop: 10, letterSpacing: '-0.01em' }}>
+              Whittaker, Arbon &amp; Carollo, 2012
+            </div>
+            <div style={sans(40, { marginTop: 28 })}>Software Engineering at Google</div>
+            <div style={{ fontSize: 28, color: c.muted, marginTop: 10, letterSpacing: '-0.01em' }}>
+              Winters, Manshreck &amp; Wright, 2020
+            </div>
+          </div>
+          <Label style={{ fontSize: 16, ...r(900, 'fade') }}>Images: Google Testing Blog · Addison-Wesley</Label>
+        </div>
+        <Photo src={stall} alt="Tech on the Toilet pages posted on a bathroom stall door" width={471} delay={300} />
+        <Photo src={book} alt="Cover of How Google Tests Software" width={470} delay={500} />
+      </div>
+    </Frame>
+  );
+};
+
+// ─── 03 · The analogy ─────────────────────────────────────────────────────────
 const AnalogyRow = ({ domain, tool, noun, delay }: { domain: string; tool: string; noun: string; delay: number }) => {
   const r = useReveal();
   return (
@@ -338,24 +412,30 @@ const AnalogyRow = ({ domain, tool, noun, delay }: { domain: string; tool: strin
   );
 };
 
-const Analogy: Page = () => (
-  <Frame>
-    <Head
-      eyebrow="The analogy"
-      title={
-        <>
-          <Dim>Same job,</Dim> different material.
-        </>
-      }
-    />
-    <div style={{ marginTop: 88, borderBottom: `1px solid ${c.rule}` }}>
-      <AnalogyRow domain="Software" tool="Tests" noun="code" delay={250} />
-      <AnalogyRow domain="Models" tool="Evals" noun="model" delay={450} />
-    </div>
-  </Frame>
-);
+const Analogy: Page = () => {
+  const r = useReveal();
+  return (
+    <Frame>
+      <Head
+        eyebrow="The analogy"
+        title={
+          <>
+            <Dim>Same job,</Dim> different material.
+          </>
+        }
+      />
+      <div style={{ marginTop: 88, borderBottom: `1px solid ${c.rule}` }}>
+        <AnalogyRow domain="Software" tool="Tests" noun="code" delay={250} />
+        <AnalogyRow domain="Models" tool="Evals" noun="model" delay={450} />
+      </div>
+      <p style={{ fontSize: 32, color: c.muted, letterSpacing: '-0.02em', margin: '44px 0 0', ...r(750, 'fade') }}>
+        “Model” here is the whole system: weights, prompt, tools, harness.
+      </p>
+    </Frame>
+  );
+};
 
-// ─── 03 · Assert vs measure ───────────────────────────────────────────────────
+// ─── 04 · Assert vs measure ───────────────────────────────────────────────────
 const Pill = ({ children, on }: { children: ReactNode; on?: boolean }) => (
   <div
     style={{
@@ -395,6 +475,11 @@ const Histogram = () => {
         ))}
       </div>
       <div style={{ height: 1, background: c.dim }} />
+      {/* 95% interval around the mean. The tint sits on an inner node: the fade-in
+          animation ends at opacity 1 and would override a static opacity on the same node. */}
+      <div style={{ position: 'absolute', left: '51%', width: '14%', top: -6, bottom: 20, ...r(1250, 'fade') }}>
+        <div style={{ width: '100%', height: '100%', background: 'var(--osd-accent)', opacity: 0.14 }} />
+      </div>
       <div
         style={{
           position: 'absolute',
@@ -417,6 +502,7 @@ const Histogram = () => {
       >
         0.87
       </div>
+      <Label style={{ position: 'absolute', right: 0, top: -36, ...r(1400, 'fade') }}>n = 500 · 95% CI</Label>
     </div>
   );
 };
@@ -453,7 +539,8 @@ const AssertMeasure: Page = () => {
         <Window title="eval_model.py" tag="PY" style={r(380)}>
           <PanelBody>
             <Code>
-              score(model, D) <span style={{ color: c.dim }}>→</span> 0.87
+              score(model, D) <span style={{ color: c.dim }}>→</span> 0.87{' '}
+              <span style={{ color: c.muted }}>± 0.03</span>
             </Code>
             <Histogram />
             <div style={sans(44)}>A distribution.</div>
@@ -464,7 +551,7 @@ const AssertMeasure: Page = () => {
   );
 };
 
-// ─── 04 · Expansion ───────────────────────────────────────────────────────────
+// ─── 05 · Expansion ───────────────────────────────────────────────────────────
 const Term = ({ term, title, lead }: { term: ReactNode; title: string; lead?: boolean }) => (
   <div style={{ borderTop: `1px solid ${lead ? 'var(--osd-text)' : c.rule}`, paddingTop: 36 }}>
     <div style={sans(64, { height: 80, color: lead ? 'var(--osd-text)' : c.muted })}>{term}</div>
@@ -533,13 +620,13 @@ const Expansion: Page = () => {
         </Steps>
       </div>
       <p style={{ fontSize: 32, color: c.muted, letterSpacing: '-0.02em', marginTop: 112, ...r(500, 'fade') }}>
-        At temperature 0, only the first term survives.
+        Even at temperature 0, every term survives.
       </p>
     </Frame>
   );
 };
 
-// ─── 05 · Same toolbox ────────────────────────────────────────────────────────
+// ─── 06 · Same toolbox ────────────────────────────────────────────────────────
 const MapRow = ({ from, to, delay }: { from: string; to: string; delay: number }) => {
   const r = useReveal();
   return (
@@ -570,30 +657,36 @@ const MapRow = ({ from, to, delay }: { from: string; to: string; delay: number }
   );
 };
 
-const Toolbox: Page = () => (
-  <Frame>
-    <Head
-      eyebrow="The mapping"
-      title={
-        <>
-          <Dim>Same toolbox,</Dim> new material.
-        </>
-      }
-    />
-    <div style={{ display: 'grid', gridTemplateColumns: '840px 1fr', marginTop: 72, marginBottom: 20 }}>
-      <Label>In software</Label>
-      <Label style={{ color: 'var(--osd-text)' }}>In evals</Label>
-    </div>
-    <div style={{ borderBottom: `1px solid ${c.rule}` }}>
-      <MapRow from="Unit test" to="Capability eval" delay={200} />
-      <MapRow from="Integration test" to="End-to-end task eval" delay={320} />
-      <MapRow from="Regression suite" to="Golden set" delay={440} />
-      <MapRow from="CI on every commit" to="Evals on every checkpoint" delay={560} />
-    </div>
-  </Frame>
-);
+const Toolbox: Page = () => {
+  const r = useReveal();
+  return (
+    <Frame>
+      <Head
+        eyebrow="The mapping"
+        title={
+          <>
+            <Dim>Same toolbox,</Dim> new material.
+          </>
+        }
+      />
+      <div style={{ display: 'grid', gridTemplateColumns: '840px 1fr', marginTop: 72, marginBottom: 20 }}>
+        <Label>In software</Label>
+        <Label style={{ color: 'var(--osd-text)' }}>In evals</Label>
+      </div>
+      <div style={{ borderBottom: `1px solid ${c.rule}` }}>
+        <MapRow from="Unit test" to="Component eval" delay={200} />
+        <MapRow from="Integration test" to="End-to-end task eval" delay={320} />
+        <MapRow from="Regression suite" to="Golden set" delay={440} />
+        <MapRow from="Presubmit, then post-submit" to="Smoke evals, then the full suite" delay={560} />
+      </div>
+      <p style={{ fontSize: 32, color: c.muted, letterSpacing: '-0.02em', margin: '44px 0 0', ...r(900, 'fade') }}>
+        Borrow the workflow, not the certainty.
+      </p>
+    </Frame>
+  );
+};
 
-// ─── 06 · Pydantic Evals ──────────────────────────────────────────────────────
+// ─── 07 · Pydantic Evals ──────────────────────────────────────────────────────
 const ApiRow = ({ api, meaning, delay }: { api: string; meaning: string; delay: number }) => {
   const r = useReveal();
   return (
@@ -643,11 +736,15 @@ const Pydantic: Page = () => {
         <ApiRow api="dataset.evaluate_sync(task)" meaning="pytest" delay={500} />
         <ApiRow api="EvaluationReport" meaning="Test report" delay={580} />
       </Window>
+      <p style={{ fontSize: 30, color: c.muted, letterSpacing: '-0.02em', margin: '30px 0 0', ...r(800, 'fade') }}>
+        Their table, and their caveat:{' '}
+        <span style={{ color: 'var(--osd-text)' }}>“a useful metaphor (although not perfect).”</span>
+      </p>
     </Frame>
   );
 };
 
-// ─── 07 · Where it breaks ─────────────────────────────────────────────────────
+// ─── 08 · Where it breaks ─────────────────────────────────────────────────────
 const Icon = ({ children }: { children: ReactNode }) => (
   <svg
     width="64"
@@ -682,10 +779,10 @@ const Card = ({ children, delay, style }: { children: ReactNode; delay: number; 
 };
 
 const BreakCard = ({ icon, title, body, delay }: { icon: ReactNode; title: string; body: string; delay: number }) => (
-  <Card delay={delay} style={{ padding: '48px 40px', height: 400, boxSizing: 'border-box' }}>
+  <Card delay={delay} style={{ padding: '44px 32px', height: 420, boxSizing: 'border-box' }}>
     {icon}
-    <div style={sans(50, { marginTop: 48 })}>{title}</div>
-    <div style={{ fontSize: 29, lineHeight: 1.45, color: c.muted, marginTop: 16, letterSpacing: '-0.01em' }}>
+    <div style={sans(44, { marginTop: 48 })}>{title}</div>
+    <div style={{ fontSize: 28, lineHeight: 1.45, color: c.muted, marginTop: 16, letterSpacing: '-0.01em' }}>
       {body}
     </div>
   </Card>
@@ -701,7 +798,7 @@ const Breaks: Page = () => (
         </>
       }
     />
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 28, marginTop: 80 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 24, marginTop: 80 }}>
       <BreakCard
         delay={200}
         title="Noise"
@@ -715,7 +812,7 @@ const Breaks: Page = () => (
       <BreakCard
         delay={300}
         title="No spec"
-        body="The eval set is the spec."
+        body="The eval set is a proxy, not the spec."
         icon={
           <Icon>
             <path d="M16 6 H40 L50 16 V58 H16 Z" strokeDasharray="5 5" />
@@ -739,7 +836,7 @@ const Breaks: Page = () => (
       <BreakCard
         delay={500}
         title="Leakage"
-        body="The test set is in the training data."
+        body="Answers leak: in training, and at run time."
         icon={
           <Icon>
             <circle cx="24" cy="32" r="18" />
@@ -748,11 +845,22 @@ const Breaks: Page = () => (
           </Icon>
         }
       />
+      <BreakCard
+        delay={600}
+        title="Gaming"
+        body="The model can spot the test, then exploit it."
+        icon={
+          <Icon>
+            <path d="M4 32 C16 12 48 12 60 32 C48 52 16 52 4 32 Z" />
+            <circle cx="32" cy="32" r="9" />
+          </Icon>
+        }
+      />
     </div>
   </Frame>
 );
 
-// ─── 08 · Testing on the Toilet ───────────────────────────────────────────────
+// ─── 09 · Testing on the Toilet ───────────────────────────────────────────────
 const TipCard = ({ from, title, body, delay }: { from: string; title: string; body: string; delay: number }) => (
   <Card delay={delay} style={{ padding: '36px 44px' }}>
     <Label>← {from}</Label>
@@ -764,10 +872,10 @@ const TipCard = ({ from, title, body, delay }: { from: string; title: string; bo
 const Toilet: Page = () => (
   <Frame>
     <Head
-      eyebrow="Testing on the Toilet"
+      eyebrow="Stall, blog and book"
       title={
         <>
-          <Dim>Google’s stall tips,</Dim> ported to evals.
+          <Dim>Google’s testing tips,</Dim> ported to evals.
         </>
       }
     />
@@ -775,12 +883,12 @@ const Toilet: Page = () => (
       <TipCard
         delay={250}
         from="Mutation testing"
-        title="Give graders a mutation score"
-        body="Seed known-bad answers."
+        title="Mutation-test your graders"
+        body="Seed known-bad answers. Read the survivors."
       />
       <TipCard
         delay={350}
-        from="Change-detector tests"
+        from="Narrow assertions"
         title="Spare the paraphrases"
         body="Accept correct rewordings."
       />
@@ -789,14 +897,24 @@ const Toilet: Page = () => (
         delay={550}
         from="Verify state-changing calls"
         title="Grade writes, not reads"
-        body="Judge outcomes, not steps."
+        body="Judge outcomes, not steps. Then read the transcript."
       />
     </div>
   </Frame>
 );
 
-// ─── 09 · Where the rules flip ────────────────────────────────────────────────
-const FlipRow = ({ old, next, delay }: { old: string; next: ReactNode; delay: number }) => {
+// ─── 10 · The fine print becomes the rule ─────────────────────────────────────
+const FlipRow = ({
+  rule,
+  finePrint,
+  next,
+  delay,
+}: {
+  rule: string;
+  finePrint: string;
+  next: ReactNode;
+  delay: number;
+}) => {
   const r = useReveal();
   return (
     <div
@@ -808,22 +926,11 @@ const FlipRow = ({ old, next, delay }: { old: string; next: ReactNode; delay: nu
         borderTop: `1px solid ${c.rule}`,
       }}
     >
-      <div style={r(delay, 'fade')}>
-        <span style={{ position: 'relative', ...sans(46, { color: c.dim }) }}>
-          {old}
-          <span
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              top: '55%',
-              height: 2,
-              background: c.red,
-              transformOrigin: 'left',
-              ...r(delay + 500, 'growx', 500),
-            }}
-          />
-        </span>
+      <div>
+        <div style={sans(46, { color: c.dim, ...r(delay, 'fade') })}>{rule}</div>
+        <div style={monoText(22, { color: c.muted, marginTop: 14, ...r(delay + 400, 'fade') })}>
+          <span style={{ color: 'var(--osd-accent)' }}>*</span> {finePrint}
+        </div>
       </div>
       <div style={sans(46, r(delay + 800))}>{next}</div>
     </div>
@@ -833,34 +940,45 @@ const FlipRow = ({ old, next, delay }: { old: string; next: ReactNode; delay: nu
 const Flips: Page = () => (
   <Frame>
     <Head
-      eyebrow="Inversions"
+      eyebrow="Fine print"
       title={
         <>
-          <Dim>Where Google’s rules</Dim> flip.
+          <Dim>Google’s exceptions</Dim> become the rule.
         </>
       }
     />
     <div style={{ display: 'grid', gridTemplateColumns: '700px 1fr', marginTop: 72, marginBottom: 16 }}>
-      <Label>In software</Label>
-      <Label style={{ color: 'var(--osd-text)' }}>In evals</Label>
+      <Label>In software: the fine print</Label>
+      <Label style={{ color: 'var(--osd-text)' }}>In evals: the main text</Label>
     </div>
     <div style={{ borderBottom: `1px solid ${c.rule}` }}>
-      <FlipRow delay={200} old="Tests have no tests." next="Graders must." />
+      <FlipRow
+        delay={200}
+        rule="Tests have no tests."
+        finePrint="nontrivial test utilities get their own"
+        next="Test graders against human labels."
+      />
       <FlipRow
         delay={900}
-        old="Fix flakiness."
+        rule="Fix flakiness."
+        finePrint="unless production code is nondeterministic"
         next={
           <>
-            Report pass<sup style={{ fontSize: '0.6em' }}>k</sup>.
+            Report pass<sup style={{ fontSize: '0.6em' }}>k</sup>. Still fix the harness.
           </>
         }
       />
-      <FlipRow delay={1600} old="Never change tests." next="Rotate the items." />
+      <FlipRow
+        delay={1600}
+        rule="Never change tests."
+        finePrint="unless the requirements change"
+        next="Rotate what you tune on. Keep regressions."
+      />
     </div>
   </Frame>
 );
 
-// ─── 10 · Green dashboard ─────────────────────────────────────────────────────
+// ─── 11 · Green dashboard ─────────────────────────────────────────────────────
 const COLS = 41;
 const ROWS = 5;
 const isFail = (i: number) => (i * 53 + 11) % (COLS * ROWS) < 16; // 16 / 205 fail → 92.2%
@@ -884,12 +1002,20 @@ const Dashboard: Page = () => {
         style={{
           position: 'absolute',
           left: PAD,
+          right: PAD,
           top: 690,
+          display: 'flex',
+          justifyContent: 'space-between',
           ...monoText(20, { letterSpacing: '0.08em', color: c.dim }),
           ...r(600, 'fade'),
         }}
       >
-        PASS RATE <span style={{ color: 'var(--osd-text)' }}>92.2%</span> ▲ 0.4
+        <span>
+          PASS RATE <span style={{ color: 'var(--osd-text)' }}>92.2%</span> ▲ 0.4
+        </span>
+        <span>
+          N = 205 · ONE CASE = 0.49 · 95% CI <span style={{ color: 'var(--osd-text)' }}>± 3.7</span>
+        </span>
       </div>
       <div
         style={{
@@ -924,7 +1050,7 @@ const Dashboard: Page = () => {
 };
 Dashboard.transition = settle;
 
-// ─── 11 · The eval loop ───────────────────────────────────────────────────────
+// ─── 12 · The eval loop ───────────────────────────────────────────────────────
 const LOOP_S = 8; // seconds per lap — the list highlight and the orbiting dot share it
 
 const LoopStep = ({ n, title }: { n: number; title: string }) => {
@@ -986,10 +1112,10 @@ const Loop: Page = () => {
       />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 600px', alignItems: 'center', marginTop: 12 }}>
         <div>
-          <LoopStep n={1} title="Write the eval" />
-          <LoopStep n={2} title="Change the model" />
-          <LoopStep n={3} title="Run it" />
-          <LoopStep n={4} title="Inspect failures" />
+          <LoopStep n={1} title="Inspect failures" />
+          <LoopStep n={2} title="Write the eval" />
+          <LoopStep n={3} title="Change the system" />
+          <LoopStep n={4} title="Run it" />
           <p style={{ fontSize: 34, color: c.muted, letterSpacing: '-0.02em', margin: '44px 0 0 32px', ...r(800, 'fade') }}>
             Repeat until the failures are boring.
           </p>
@@ -1039,8 +1165,8 @@ const Loop: Page = () => {
   );
 };
 
-// ─── 12 · Habits ──────────────────────────────────────────────────────────────
-const Habit = ({ n, title, delay }: { n: string; title: string; delay: number }) => {
+// ─── 13 · Habits ──────────────────────────────────────────────────────────────
+const Habit = ({ n, title, note, delay }: { n: string; title: string; note?: string; delay: number }) => {
   const r = useReveal();
   return (
     <div
@@ -1055,6 +1181,7 @@ const Habit = ({ n, title, delay }: { n: string; title: string; delay: number })
     >
       <span style={monoText(22, { color: c.dim })}>{n}</span>
       <span style={sans(88)}>{title}</span>
+      {note ? <span style={{ fontSize: 34, color: c.muted, letterSpacing: '-0.02em' }}>{note}</span> : null}
     </div>
   );
 };
@@ -1065,7 +1192,7 @@ const Habits: Page = () => {
     <Frame>
       <Eyebrow style={{ marginTop: 40, ...r(0, 'fade') }}>Habits worth stealing from software</Eyebrow>
       <div style={{ marginTop: 56 }}>
-        <Habit delay={150} n="01" title="Eval-driven development" />
+        <Habit delay={150} n="01" title="Eval-driven development" note="for failures you’ve seen" />
         <Habit delay={300} n="02" title="Version your evals" />
         <Habit delay={450} n="03" title="Every bug becomes a case" />
       </div>
@@ -1073,7 +1200,7 @@ const Habits: Page = () => {
   );
 };
 
-// ─── 13 · Closing ─────────────────────────────────────────────────────────────
+// ─── 14 · Closing ─────────────────────────────────────────────────────────────
 const Closing: Page = () => {
   const r = useReveal();
   return (
@@ -1093,6 +1220,9 @@ const Closing: Page = () => {
           <span style={{ display: 'block', ...r(100, 'up', 900) }}>No evals,</span>
           <span style={{ display: 'block', color: c.muted, ...r(350, 'up', 900) }}>no deploy.</span>
         </h1>
+        <p style={{ fontSize: 40, letterSpacing: '-0.02em', margin: '56px 0 0', ...r(900, 'fade') }}>
+          A gate, not a guarantee. <span style={{ color: c.muted }}>Then watch production.</span>
+        </p>
       </div>
     </Frame>
   );
@@ -1106,6 +1236,7 @@ export const meta: SlideMeta = {
 
 export default [
   Cover,
+  Origin,
   Analogy,
   AssertMeasure,
   Expansion,
